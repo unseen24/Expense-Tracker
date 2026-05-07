@@ -1,52 +1,77 @@
 import argparse
+import json
+import os
+import datetime
+
+tasks = {
+        "id": 0,
+        "description": "",
+        "amount": "",
+        "createdAt": "",
+        "updatedAt": ""
+    }
 
 #Users can add an expense with a description and amount.
 def add_expense(description, amount):
     print(f'{description} {amount}')
 
 #Users can update an expense.
-def update_expense():
-    pass
+def update_expense(id):
+    print(id)
 #Users can delete an expense.
-def delete_expense():
-    pass
+def delete_expense(id):
+    print(id+1)
 #Users can view all expenses.
 def view_all():
-    pass
+     print('This is the list of expenses')
 #Users can view a summary of all expenses.
 def view_summary():
-    pass
+    print('This is the summary')
 #Users can view a summary of expenses for a specific month (of current year)
 def view_month_summary():
-    pass
+    print('This is the month summary')
 
 def main():
     parser = argparse.ArgumentParser()
+    subparser = parser.add_subparsers(dest='command')
 
-    parser.add_argument('-add', nargs=2, help='Add an expense', default=None)
-    parser.add_argument('-update', help='Update an expense', default=None)
-    parser.add_argument('-delete', help='Delete an expense', default=None)
-    parser.add_argument('-view_all', help='View all expenses', default=None)
-    parser.add_argument('-view_summary', help='View summary of all expenses', default=None)
-    parser.add_argument('-view_month_summary', help='View summary of expenses in a specific month', default=None)
+    add = subparser.add_parser('add', help='Add an expense')
+    add.add_argument('-d', help='Description of the expense', required=True)
+    add.add_argument('-a', type=int, help='Amount of the expense', required=True)
+
+    update = subparser.add_parser('update', help='Update an expense')
+    update.add_argument('--id', type=int, help='ID of the expense', required=True)
+
+    delete = subparser.add_parser('delete', help='Delete an expense')
+    delete.add_argument('--id', type=int, help='ID of the expense', required=True)
+
+    #doesn't have a subparser
+    list_expense = subparser.add_parser('list', help='List all expenses')
+
+    summary = subparser.add_parser('summary', help='List the summary of expenses')
+    summary.add_argument('--month', help='List the summary of expenses in a specific month', type=int)
+
 
     args = parser.parse_args()
 
-    if args.add != None:
-        desc = args.add[0]
-        amt = args.add[1]
-        add_expense(desc, amt)
-    
-    elif args.update != None:
-        print(args.update)
-    elif args.delete != None:
-        print(args.update)
-    elif args.view_all != None:
-        print(args.update)
-    elif args.view_summary != None:
-        print(args.update)
-    elif args.view_month_summary != None:
-        print(args.update)
+    if args.command == 'add':
+        if args.d and args.a:
+            add_expense(args.d, args.a)
+
+    elif args.command == 'update':
+        update_expense(args.id)
+
+    elif args.command == 'delete':
+        delete_expense(args.id)
+
+    elif args.command == 'summary':
+        if args.month:
+            view_month_summary()
+        else:
+            view_summary()
+
+    else:
+        view_all()
     
 
 if __name__ == '__main__':
