@@ -3,10 +3,10 @@ import json
 import os
 import datetime
 
+date = datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p")
+
 #Users can add an expense with a description and amount.
 def add_expense(description, amount):
-
-    date = datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p")
 
     try:
         with open('expenses.json') as f:
@@ -14,6 +14,7 @@ def add_expense(description, amount):
 
             if any(expense['description'] == description for expense in file['expenses']):
                 print('This expense already exist')
+                return
 
             else:
                 
@@ -31,8 +32,7 @@ def add_expense(description, amount):
 
         with open('expenses.json', 'w') as f:
             json.dump(file, f, indent=4)
-
-        print("Expense added successfully. ID:", file["expenses"][-1].get('id'))
+            print("Expense added successfully. ID:", file["expenses"][-1].get('id'))
 
     except FileNotFoundError: 
         with open('expenses.json', 'w') as f:
@@ -50,18 +50,83 @@ def add_expense(description, amount):
             
             json.dump(file_data, f, indent=4)
 
-            print("Expense added successfully. ID:", file["expenses"][-1].get('id'))
+            print("Expense added successfully. ID:", file_data["expenses"][-1].get('id'))
 
 
 #Users can update an expense.
 def update_expense(id):
-    print(id)
+    try:
+        with open('expenses.json') as f:
+            file = json.load(f)
+
+            new_desc = input('Enter a new description for the expense: ')
+            new_amt = input('Enter a new amount for the expense: ')
+
+            #expense_updated = [x for x in file['expenses'] if x['id'] == id]
+            found = False
+            for x in file['expenses']:
+                if x['id'] == id:
+                    x.update({'description': new_desc, 'amount': new_amt, 'date': date})
+                    found = True
+                    break
+            
+            if not found:
+                print('ID not found')
+                return
+            
+        
+        with open('expenses.json', 'w') as f:
+            json.dump(file, f, indent=4)
+            print("Expense updated successfully. ID:", file["expenses"][-1].get('id'))
+    
+    except FileNotFoundError:
+        print('File does not Exist. Create one by adding an expense.')
+
+    except json.JSONDecodeError:
+        print('File is empty. Try adding an expense.')
+
+
 #Users can delete an expense.
 def delete_expense(id):
-    print(id+1)
+    try:
+        with open('expenses.json') as f:
+            file = json.load(f)
+
+            found = False
+            for x in file['expenses']:
+                if x['id'] == id:
+                    file['expenses'].remove(x)
+                    found = True
+                    break
+            
+            if not found:
+                print('ID not found')
+                return
+            
+        with open('expenses.json', 'w') as f:
+            json.dump(file, f, indent=4)
+            print("Expense deleted successfully.")
+
+    except FileNotFoundError:
+        print('File does not Exist. Create one by adding an expense.')
+
+    except json.JSONDecodeError:
+        print('File is empty.')
+
 #Users can view all expenses.
 def view_all():
-     print('This is the list of expenses')
+    try:
+        with open('expenses.json') as f:
+            file = json.load(f)
+
+            for x in file['expenses']:
+                print(f"ID: {x['id']:<5} Description: {x['description']:<30} Amount: {x['amount']:<15} Date: {x['date']:<15}")
+
+    except FileNotFoundError:
+        print('File does not Exist. Create one by adding an expense.')
+
+    except json.JSONDecodeError:
+        print('File is empty.')
 #Users can view a summary of all expenses.
 def view_summary():
     print('This is the summary')
