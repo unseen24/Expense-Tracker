@@ -17,8 +17,7 @@ def deduct_budget(amount):
                 if "budget" in x:
                     x["budget"] = x["budget"] - amount
                 else:
-                    return
-                #some doesnt have budget in the dictionary
+                    continue
         
         fh.write_file(file)
             
