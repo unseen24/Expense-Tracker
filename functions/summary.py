@@ -1,22 +1,18 @@
 from datetime import datetime
-import json
+import functions.file_handler as fh
 
 def view_summary():
-    try:
-        with open('expenses.json') as f:
-            file = json.load(f)
+    file = fh.open_file()
 
-            total = 0
-            for x in file['expenses']:
-                total = total + x['amount']
+    if file is None:
+        print('File does not Exist or is empty. Create one by adding an expense.')
+    else:
+        total = 0
+        for x in file['expenses']:
+            total = total + x['amount']
 
-            print(f'Total Expenses:{total}')
+        print(f'Total Expenses:{total}')
 
-    except FileNotFoundError:
-        print('File does not Exist. Create one by adding an expense.')
-
-    except json.JSONDecodeError:
-        print('File is empty.')
 #Users can view a summary of expenses for a specific month (of current year)
 def view_month_summary(month):
     months = {
@@ -34,20 +30,15 @@ def view_month_summary(month):
         12: "December"
     }
 
-    try:
-        with open('expenses.json') as f:
-            file = json.load(f)
+    file = fh.open_file()
 
-            total = 0
-            for x in file['expenses']:
+    if file is None:
+        print('File does not Exist or is empty. Create one by adding an expense.')
+    else:
+        total = 0
+        for x in file['expenses']:
                 date = datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
                 if date.month == month:
                     total = total + x['amount']
 
-            print(f'Total Expenses this {months[month]}: {total}')
-
-    except FileNotFoundError:
-        print('File does not Exist. Create one by adding an expense.')
-
-    except json.JSONDecodeError:
-        print('File is empty.')
+        print(f'Total Expenses this {months[month]}: {total}')
