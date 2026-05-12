@@ -43,3 +43,5 @@ def add_expense(description, amount, category = 'Miscellaneous'):
             file['expenses'].append(new_expense)
             fh.write_file(file)
             print("Expense added successfully. ID:", file["expenses"][-1].get('id'))
+            #add the budget if previously set for the month
+            #budget limit doesnt work

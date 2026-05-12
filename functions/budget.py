@@ -16,6 +16,7 @@ def deduct_budget(amount):
             if date.month == curr_month.month:
                 if "budget" in x:
                     x["budget"] = x["budget"] - amount
+                    #if i update the amount it wont deduct
                 else:
                     continue
         
@@ -32,9 +33,10 @@ def limit_budget(amount):
         for x in file['expenses']:
             date = datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
             if date.month == curr_month:
-                if x['budget'] < amount:
+                if x['budget'] > amount:
                     return False
-
+                
+#need a set new budget function
 def set_budget(budget, month):
     file = fh.open_file()
     total_expenses = 0
