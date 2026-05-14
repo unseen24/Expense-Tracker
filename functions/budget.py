@@ -4,23 +4,44 @@ import functions.file_handler as fh
 
 curr_month = dt.datetime.now()
 
-def deduct_budget(amount):
-    file = fh.open_file()
+def deduct_budget(amount, file_data = None):
+    #to avoid having duplicates of file
+    #when opened in update, that opens a file and this function also opens a file
+    #that will cause a double file opening making the file writing confusing
+    if file_data is None:
+        file = fh.open_file()
 
-    if file is None:
-        print('File does not Exist or is empty. Create one by adding an expense.')
-    
-    else:
-        for x in file['expenses']:
-            date = datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
-            if date.month == curr_month.month:
-                if "budget" in x:
-                    x["budget"] = x["budget"] - amount
-                    #if i update the amount it wont deduct
-                else:
-                    continue
+        if file is None:
+            print('File does not Exist or is empty. Create one by adding an expense.')
         
-        fh.write_file(file)
+        else:
+            for x in file['expenses']:
+                date = datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
+                if date.month == curr_month.month:
+                    if "budget" in x:
+                        x["budget"] -= amount
+                    else:
+                        continue
+            
+            fh.write_file(file)
+
+    else:
+        file = file_data
+
+        if file is None:
+            print('File does not Exist or is empty. Create one by adding an expense.')
+        
+        else:
+            for x in file['expenses']:
+                date = datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
+                if date.month == curr_month.month:
+                    if "budget" in x:
+                        x["budget"] -= amount
+                    else:
+                        continue
+            
+            fh.write_file(file)
+
             
 
 def limit_budget(amount):
@@ -34,6 +55,7 @@ def limit_budget(amount):
             date = datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
             if date.month == curr_month:
                 if x['budget'] > amount:
+                    print('Amount exceeds remaining budget this month.')
                     return False
                 
 #need a set new budget function

@@ -30,11 +30,10 @@ def update_expense(id):
             new_amt = input('Enter a new amount for the expense: ')
 
             if b.limit_budget(int(new_amt)) == False:
-                print('Amount exceeds remaining budget this month.')
                 return
             
             else:
-                b.deduct_budget(int(new_amt))
+                b.deduct_budget(int(new_amt), file_data = file)
         else:
             new_amt = file['expenses'][0]['amount']
         
