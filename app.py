@@ -37,6 +37,7 @@ def main():
             #check if amount doesnt exceed remaining budget
             #still adds the expense even if it exceeds the budget
             if b.limit_budget(args.a) == False:
+                #print("DEBUG: I am inside the IF block, about to hit return!")
                 return
 
             b.deduct_budget(args.a)

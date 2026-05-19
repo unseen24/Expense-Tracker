@@ -22,6 +22,7 @@ def deduct_budget(amount, file_data = None):
                         x["budget"] -= amount
                     else:
                         print('Amount exceeds remaining budget this month.')
+                        #print("DEBUG: I am inside the ELSE block, about to hit return!")
                         return
             
             fh.write_file(file)
@@ -55,11 +56,14 @@ def limit_budget(amount):
     else:
         for x in file['expenses']:
             date = datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
-            if date.month == curr_month:
-                if x['budget'] < amount:
+            if date.month == curr_month.month:
+                if amount > x['budget']:
                     print('Amount exceeds remaining budget this month.')
+                    #print("DEBUG FROM INSIDE FUNCTION: I am returning False right now!")
                     return False
-        return True
+                
+        #print("DEBUG FROM INSIDE FUNCTION: I finished the loop and I am returning True!")
+        return True 
                 
 #need a set new budget function
 def set_budget(budget, month):
