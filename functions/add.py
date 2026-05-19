@@ -2,6 +2,7 @@ import datetime as dt
 import functions.file_handler as fh
 
 date = dt.datetime.now().strftime("%Y-%m-%d %I:%M %p")
+curr_month = dt.datetime.now().month
 #Users can add an expense with a description and amount.
 def add_expense(description, amount, category = 'Miscellaneous'):
     
@@ -15,7 +16,8 @@ def add_expense(description, amount, category = 'Miscellaneous'):
                             "description": description,
                             "amount": amount,
                             "category": category,
-                            "date": date
+                            "date": date,
+                            "budget": 0
                         }
                     ]
                 }
@@ -29,6 +31,12 @@ def add_expense(description, amount, category = 'Miscellaneous'):
             return
 
         else:
+            budget = 0
+            for x in file['expenses']:
+                exp_date = dt.datetime.strptime(x['date'], "%Y-%m-%d %I:%M %p")
+                if exp_date.month == curr_month and x["budget"] > 0:
+                        budget = x["budget"]
+
             last_id = file['expenses'][-1].get('id') if file['expenses'] else 0
             new_id = last_id + 1
 
@@ -38,10 +46,10 @@ def add_expense(description, amount, category = 'Miscellaneous'):
                 "amount": amount,
                 "category": category,
                 "date": date,
+                "budget": budget
             }
 
             file['expenses'].append(new_expense)
             fh.write_file(file)
             print("Expense added successfully. ID:", file["expenses"][-1].get('id'))
-            #add the budget if previously set for the month
-            #budget limit doesnt work
+            

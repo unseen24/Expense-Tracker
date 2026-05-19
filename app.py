@@ -33,21 +33,18 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'add':
-        if args.d and args.a and args.c:
+        if args.d and args.a:
             #check if amount doesnt exceed remaining budget
+            #still adds the expense even if it exceeds the budget
             if b.limit_budget(args.a) == False:
-                print('Amount exceeds remaining budget this month.')
+                return
 
-            else:
-                b.deduct_budget(args.a)
+            b.deduct_budget(args.a)
+
+            if args.c:
                 a.add_expense(args.d, args.a, args.c)
-
-        elif args.d and args.a:
-            if b.limit_budget(args.a) == False:
-                print('Amount exceeds remaining budget this month.')
-                
+            
             else:
-                b.deduct_budget(args.a)
                 a.add_expense(args.d, args.a)
 
     elif args.command == 'update':
