@@ -5,6 +5,7 @@ import functions.list as l
 import functions.summary as s
 import functions.update as u
 import functions.budget as b
+import functions.export as e
 
 def main():
     parser = argparse.ArgumentParser()
@@ -29,6 +30,8 @@ def main():
     budget = subparser.add_parser('budget', help = 'Set a budget limit for the month')
     budget.add_argument('-b', type = int, help = 'The budget limit', required = True)
     budget.add_argument('-m', help = 'Set a budget limit for a specific month', type = int, required = True)
+
+    export = subparser.add_parser('export', help = 'Export expenses to a CSV file')
 
     args = parser.parse_args()
 
@@ -83,6 +86,9 @@ def main():
             return
         
         b.set_budget(args.b, args.m)
+
+    elif args.command == 'export':
+        e.export_expenses()
 
     else:
         l.view_all()
