@@ -3,6 +3,7 @@ import functions.file_handler as fh
 
 date = dt.datetime.now().strftime("%Y-%m-%d %I:%M %p")
 curr_month = dt.datetime.now().month
+
 #Users can add an expense with a description and amount.
 def add_expense(description, amount, category = 'Miscellaneous'):
     

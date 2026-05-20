@@ -33,13 +33,14 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'add':
-        if args.d and args.a:
-            #check if amount doesnt exceed remaining budget
-            #still adds the expense even if it exceeds the budget
+        if args.d and args.a > 0:
+            
+            #checks if the amount doesnt exceed the remaining budget
             if b.limit_budget(args.a) == False:
                 #print("DEBUG: I am inside the IF block, about to hit return!")
                 return
 
+            #deduct amount from the previously set budget
             b.deduct_budget(args.a)
 
             if args.c:
@@ -48,20 +49,39 @@ def main():
             else:
                 a.add_expense(args.d, args.a)
 
+        else:
+            print('Invalid input. Description must be provided and amount must be a positive number.')
+
     elif args.command == 'update':
+        if args.id <= 0:
+            print('Invalid ID. ID must be a positive integer.')
+            return
         u.update_expense(args.id)
 
     elif args.command == 'delete':
+        if args.id <= 0:
+            print('Invalid ID. ID must be a positive integer.')
+            return
         d.delete_expense(args.id)
 
     elif args.command == 'summary':
-        if args.month:
-            s.view_month_summary(args.month)
-        else:
+        if args.month is None:
             s.view_summary()
+
+        #check if the month is between 1 and 12
+        elif args.month <= 12 and args.month >= 1:
+            s.view_month_summary(args.month)
+
+        else:
+            print('Invalid month. Month must be between 1 and 12.')
+            return
 
     elif args.command == 'budget':
         #error if negative number is entered
+        if args.b < 0 or args.m < 1 or args.m > 12:
+            print('Invalid input. Budget must be a positive number and month must be between 1 and 12.')
+            return
+        
         b.set_budget(args.b, args.m)
 
     else:

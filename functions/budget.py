@@ -5,7 +5,8 @@ import functions.file_handler as fh
 curr_month = dt.datetime.now()
 
 def deduct_budget(amount, file_data = None):
-    #to avoid having duplicates of file
+
+    #this if statement's purpose is to avoid having duplicates of file
     #when opened in update, that opens a file and this function also opens a file
     #that will cause a double file opening making the file writing confusing
     if file_data is None:
@@ -65,7 +66,6 @@ def limit_budget(amount):
         #print("DEBUG FROM INSIDE FUNCTION: I finished the loop and I am returning True!")
         return True 
                 
-#need a set new budget function
 def set_budget(budget, month):
     file = fh.open_file()
     total_expenses = 0
